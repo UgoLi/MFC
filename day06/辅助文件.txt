@@ -1,0 +1,31 @@
+// 1. 框架窗口的OnCreate
+CFrameWnd::OnCreate(...)
+{
+   return OnCreateHelper(lpcs, pContext)
+   {
+      OnCreateClient(lpcs, pContext)
+      {
+         
+         CreateView(pContext, AFX_IDW_PANE_FIRST)
+         {
+            // 1.1 动态创建视图对象
+            CWnd* pView = (CWnd*)pContext->m_pNewViewClass->CreateObject();
+            // 1.2 创建视图窗口
+            pView->Create(...);
+         }
+      }
+   }
+}
+
+// 2. 视图窗口的OnCreate
+CView::OnCreate(...)
+{
+   // this 是 CMyView对象的地址
+   pContext->m_pCurrentDoc->AddView(this)
+   {
+       // 2.1 在文档的成员变量m_viewList中保存视图对象的地址
+       m_viewList.AddTail(pView); 
+       // 2.2 在视图的成员m_pDocument中保存了文档对象的地址
+       pView->m_pDocument = this; 
+   }
+}

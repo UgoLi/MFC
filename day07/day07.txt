@@ -1,0 +1,74 @@
+一、使用文档模板创建文档视图程序
+ 1. 相关类
+   CDocTemplate类  -- 是一个抽象父类，提供了文档模板的基本功能。
+   有两个子类：
+     CSingleDocTemplate类  -- 单文档模板类，用于创建单文档视图程序
+     CMultiDocTemplate类  -- 多文档模板类，用于创建多文档视图程序
+ 2. 使用单文档模板类CSingleDocTemplate创建单文档视图程序
+  2.1 相关类
+   CWinApp类 				-- 应用程序类
+   CFrameWnd类				-- 框架窗口类
+   CView类					-- 视图类
+   CDocument类				-- 文档类
+   CSingleDocTemplate类	-- 单文档模板类
+   
+   CSingleDocTemplate(
+      UINT nIDResource,					// 资源ID
+      CRuntimeClass* pDocClass,		// 文档的运行时类信息
+      CRuntimeClass* pFrameClass,	// 框架的运行时类信息
+      CRuntimeClass* pViewClass     // 视图的运行时类信息
+   );
+   从单文档模板的构造函数的参数可知，文档类、框架类和视图类，在定义时，都需要支持动态创建。
+  2.2 创建过程
+   2.2.1 创建单文档模板对象
+   2.2.2 将文档模板对象添加到应用程序
+   2.2.3 调用OnFileNew函数创建文档 
+   
+ 3. 使用CMultiDocTemplate类创建多文档视图程序
+  3.1 相关类
+   CMDIFrameWnd			-- 多文档的主框架窗口类
+   CMDIChildWnd			-- 多文档的子框架窗口类
+   
+   CWinApp					-- 应用程序类
+   CView						-- 视图类
+   CDocument				-- 文档类
+   
+   CMultiDocTemplate		-- 多文档模板类
+   
+   多文档模板类的构造函数：
+   CMultiDocTemplate(
+     UINT nIDResource,			  // 子框架的资源ID
+     CRuntimeClass* pDocClass,
+     CRuntimeClass* pFrameClass,//多文档的子框架窗口的运行时类信息
+     CRuntimeClass* pViewClass 
+   );
+   
+   多文档视图程序分主框架窗口和子框架窗口，两种不同的窗口分别使用不同的菜单和图标资源。
+   
+  3.2 创建多文档视图程序 (实现多个视图数据的同步)
+   3.2.1 "新建"菜单
+     CMyWinApp::OnNew
+        OnFileNew();
+   3.2.2 "新建窗口"菜单：基于原有活动文档(活动视图对应的文档)，创建子框架和视图窗口对象
+     1) 获取活动文档
+       CFrameWnd:GetActiveDocument
+     2) 根据文档获取文档模板
+       CDocument::GetDocTemplate
+     3) 使用文档模板创建新的子框架
+       CDocTemplate::CreateNewFrame
+     4) 初始化更新子框架
+       CFrameWnd::InitialUpdateFrame
+   
+   3.2.3 捕获视图内容变化的消息， ON_CONTROL_REFLECT
+     在消息处理函数中：
+     1) 获取与视图关联的文档
+       CView::GetDocument
+     2) 将活动视图的数据保存在文档中
+       CView::GetWindowText
+     3) 文档通知其他视图，引起视图的 OnUpdate 函数的调用
+       CDocument::UpdateAllViews
+   3.2.4 重写视图的 OnUpdate 函数，在函数中：
+     1) 获取与视图关联的文档
+       CView::GetDocument
+     2) 将文档的数据放到视图窗口中显示
+       CView::SetWindowText

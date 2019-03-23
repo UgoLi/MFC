@@ -1,0 +1,68 @@
+// 使用单文档模板创建单文档视图程序
+// 1. 创建单文档模板对象
+// 2. 将文档模板对象添加到应用程序
+AddDocTemplate(pTemplate)
+{
+    m_pDocManager->AddDocTemplate(pTemplate)
+    {
+       // 将文档模板对象保存到文档管理器的成员 m_templateList中
+       m_templateList.AddTail(pTemplate);
+    }
+}
+// 3. 新建文档
+OnFileNew()
+{
+   m_pDocManager->OnFileNew()
+   {
+      // 获取文档管理器中的模板链表的表头
+      CDocTemplate* pTemplate = (CDocTemplate*)m_templateList.GetHead();
+      
+      pTemplate->OpenDocumentFile(NULL)
+      {
+         OpenDocumentFile(LPCTSTR lpszPathName, BOOL bAddToMRU, BOOL bMakeVisible)
+         { 
+            // 3.1 首先创建文档对象
+            pDocument = CreateNewDocument()
+            {
+               // 3.1.1 动态创建文档对象
+               CDocument* pDocument = (CDocument*)m_pDocClass->CreateObject();
+               // 3.1.2 文档和文档模板互相保存对方地址
+               AddDocument(pDocument)
+               {
+                  CDocTemplate::AddDocument(pDoc)
+                  {
+                     // 将文档模板对象保存在文档的成员中
+                     pDoc->m_pDocTemplate = this;
+                  }
+                  // 将文档对象地址保存在文档模板的成员中
+                  m_pOnlyDoc = pDoc;
+               }
+            }
+            // 3.2 创建框架窗口
+            pFrame = CreateNewFrame(pDocument, NULL)
+            {
+               CCreateContext context;
+	            context.m_pCurrentDoc = pDoc;
+	            context.m_pNewViewClass = m_pViewClass;
+	            context.m_pNewDocTemplate = this;
+	            // 3.2.1 动态创建框架对象
+	            CFrameWnd* pFrame = (CFrameWnd*)m_pFrameClass->CreateObject();
+               // 3.2.2 创建框架窗口
+               pFrame->LoadFrame(m_nIDResource,.., &context)
+               // 3.2.3 框架窗口收到WM_CREATE消息，调用CFrameWnd::OnCreate函数
+               // 在函数中，实现动态创建视图对象，并创建视图窗口
+               // 3.2.4 视图窗口收到WM_CREATE消息，调用CView::OnCreate函数
+               // 在函数中，文档和视图互相保存对方地址
+            }
+            // 将框架对象地址保存到应用程序的成员m_pMainWnd中
+            pThread->m_pMainWnd = pFrame;
+            // 将 ID 为 AFX_IDW_PANE_FIRST 的视图设置为活动视图
+            InitialUpdateFrame(pFrame, pDocument, bMakeVisible)
+            {
+               pFrame->InitialUpdateFrame(pDoc, bMakeVisible);
+            }
+         }
+      }
+   }
+}
+

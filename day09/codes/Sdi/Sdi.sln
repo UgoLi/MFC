@@ -1,0 +1,62 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sdi", "Sdi\Sdi.vcxproj", "{4E577ABC-4086-4607-BD47-54A62044C77F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DlgDDX", "DlgDDX\DlgDDX.vcxproj", "{F54853DA-1F8F-4B35-A0AA-FB13FE5A9A28}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Login", "Login\Login.vcxproj", "{298B3663-B6FE-4DB5-A382-DC0D131F6D4E}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Add", "Add\Add.vcxproj", "{4E37E59C-1686-4A1A-A96C-52F381BAECFE}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MFCCtrl", "MFCCtrl\MFCCtrl.vcxproj", "{0529BB05-1E1A-42C8-A1BF-834641EE31FE}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MFCList", "MFCList\MFCList.vcxproj", "{074E978B-E93B-4F73-8767-BF7085B36030}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MFCCommonCtrl", "MFCCommonCtrl\MFCCommonCtrl.vcxproj", "{0999F4C1-9956-4E27-9080-E91C14DB9C4B}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ListCtrl", "ListCtrl\ListCtrl.vcxproj", "{6365AA49-FBFF-4A51-BF61-56599A942C82}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4E577ABC-4086-4607-BD47-54A62044C77F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4E577ABC-4086-4607-BD47-54A62044C77F}.Debug|Win32.Build.0 = Debug|Win32
+		{4E577ABC-4086-4607-BD47-54A62044C77F}.Release|Win32.ActiveCfg = Release|Win32
+		{4E577ABC-4086-4607-BD47-54A62044C77F}.Release|Win32.Build.0 = Release|Win32
+		{F54853DA-1F8F-4B35-A0AA-FB13FE5A9A28}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F54853DA-1F8F-4B35-A0AA-FB13FE5A9A28}.Debug|Win32.Build.0 = Debug|Win32
+		{F54853DA-1F8F-4B35-A0AA-FB13FE5A9A28}.Release|Win32.ActiveCfg = Release|Win32
+		{F54853DA-1F8F-4B35-A0AA-FB13FE5A9A28}.Release|Win32.Build.0 = Release|Win32
+		{298B3663-B6FE-4DB5-A382-DC0D131F6D4E}.Debug|Win32.ActiveCfg = Debug|Win32
+		{298B3663-B6FE-4DB5-A382-DC0D131F6D4E}.Debug|Win32.Build.0 = Debug|Win32
+		{298B3663-B6FE-4DB5-A382-DC0D131F6D4E}.Release|Win32.ActiveCfg = Release|Win32
+		{298B3663-B6FE-4DB5-A382-DC0D131F6D4E}.Release|Win32.Build.0 = Release|Win32
+		{4E37E59C-1686-4A1A-A96C-52F381BAECFE}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4E37E59C-1686-4A1A-A96C-52F381BAECFE}.Debug|Win32.Build.0 = Debug|Win32
+		{4E37E59C-1686-4A1A-A96C-52F381BAECFE}.Release|Win32.ActiveCfg = Release|Win32
+		{4E37E59C-1686-4A1A-A96C-52F381BAECFE}.Release|Win32.Build.0 = Release|Win32
+		{0529BB05-1E1A-42C8-A1BF-834641EE31FE}.Debug|Win32.ActiveCfg = Debug|Win32
+		{0529BB05-1E1A-42C8-A1BF-834641EE31FE}.Debug|Win32.Build.0 = Debug|Win32
+		{0529BB05-1E1A-42C8-A1BF-834641EE31FE}.Release|Win32.ActiveCfg = Release|Win32
+		{0529BB05-1E1A-42C8-A1BF-834641EE31FE}.Release|Win32.Build.0 = Release|Win32
+		{074E978B-E93B-4F73-8767-BF7085B36030}.Debug|Win32.ActiveCfg = Debug|Win32
+		{074E978B-E93B-4F73-8767-BF7085B36030}.Debug|Win32.Build.0 = Debug|Win32
+		{074E978B-E93B-4F73-8767-BF7085B36030}.Release|Win32.ActiveCfg = Release|Win32
+		{074E978B-E93B-4F73-8767-BF7085B36030}.Release|Win32.Build.0 = Release|Win32
+		{0999F4C1-9956-4E27-9080-E91C14DB9C4B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{0999F4C1-9956-4E27-9080-E91C14DB9C4B}.Debug|Win32.Build.0 = Debug|Win32
+		{0999F4C1-9956-4E27-9080-E91C14DB9C4B}.Release|Win32.ActiveCfg = Release|Win32
+		{0999F4C1-9956-4E27-9080-E91C14DB9C4B}.Release|Win32.Build.0 = Release|Win32
+		{6365AA49-FBFF-4A51-BF61-56599A942C82}.Debug|Win32.ActiveCfg = Debug|Win32
+		{6365AA49-FBFF-4A51-BF61-56599A942C82}.Debug|Win32.Build.0 = Debug|Win32
+		{6365AA49-FBFF-4A51-BF61-56599A942C82}.Release|Win32.ActiveCfg = Release|Win32
+		{6365AA49-FBFF-4A51-BF61-56599A942C82}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,142 @@
+马志国  149198978
+-------------------------------------------------------------
+day08 
+一、MFC绘图
+1 相关类
+   1.1 绘图设备上下文类(纸)
+   1.2 绘图对象类(画笔、画刷、字体等)
+         包括CPen-画笔、CBrush-画刷、CFont-字体、CBitmap-位图和CRgn-区域。
+         CPalette-调色板。 调色板本质是一个颜色表，我们通过索引值获取颜色表中的颜色，
+                                       目的是降低位图占用的空间大小。
+                         24位真彩色 (RGB(0~255,0~255,0~255)),3个字节，24位。
+ 
+
+2 绘图设备上下文类
+   2.1 CDC类-封装了DC的句柄与操作DC相关的API。主要表示一般的绘图设备，例如：
+                     显示器、打印机。
+   2.2 CClientDC类-继承自CDC类，表示指定窗口的客户区。
+   2.3 CPaintDC类-继承自CDC类，表示指定窗口的客户区。只在WM_PAINT消息的处理函数
+                             OnPaint()中使用。
+3 CDC类的使用
+   3.1 创建DC
+         CDC::CreateDC
+         virtual BOOL CreateDC( 
+          LPCTSTR lpszDriverName, //设备的驱动名称
+          LPCTSTR lpszDeviceName, //设备名称
+          LPCTSTR lpszOutput, //设备的接口
+          const void* lpInitData//设备的初始化参数
+         );
+         显示器：:CreateDC("DISPLAY",NULL,NULL,NULL); 
+
+   3.2 使用DC
+         CDC::TextOut/MoveTo/LineTo/Rectangle...
+   3.3 删除DC
+         CDC::DeleteDC
+4 CClientDC、CPaintDC的使用
+    只需要在创建对象时，将指定窗口的对象地址作为构造函数的参数即可。
+5 CPen、CBrush和CFont类的使用
+   5.1 创建绘图对象
+   5.2 将绘图对象选入到绘图设备中
+   5.3 使用绘图对象
+   5.4 恢复绘图设备中默认的绘图对象
+   5.5 删除绘图对象
+6 CBitmap的使用(光栅图，显示时，需要借助于一个缓冲区(兼容dc))
+   6.1 创建位图对象，加载位图资源
+   6.2 创建于当前dc兼容的兼容dc
+   6.3 将位图选入到兼容dc中
+   6.4 将位图数据从兼容dc拷贝到当前dc
+   6.5 删除兼容dc
+   6.6 删除位图对象
+
+二 MFC的文件操作
+1 相关类
+   1.1 CFile类-主要提供文件读写功能。
+   1.2 CFileFind类-主要提供文件查找遍历功能。
+2 CFile类的使用
+   2.1 新建或者打开文件
+         CFile::Open
+   2.2 文件读写
+         CFile::Read/Write
+   2.3 关闭
+         CFile::Close
+   注意的问题： 1 通常放到异常处理结构中
+                         2 文件读写时，注意文件的指针位置
+3 CFileFind类的使用
+   3.1 开始查找,参数通常一个目录，在指定目录下查找
+         CFileFind::FindFile
+   3.2 查找下一个
+         CFileFind::FineNextFile
+   3.3 获取文件的信息/判断信息
+         CFileFind::GetXXX、CFileFind::IsXXX
+   3.4 关闭查找
+         CFileFind::Close   
+   例子1:查找指定目录下的文件和子目录
+   作业：查找指定目录下的所有文件和子目录（遇到子目录继续查找，递归）
+三、序列化
+ 1 概念
+    将数据以二进制流的方式写入到文件或者从文件中读取的过程
+ 2 相关类
+    CArchive类-主要替代CFile类的Read/Write完成具体的读写操作
+ 3 CArchive类的使用步骤
+    3.1 新建或者打开文件
+         CFile::Open
+    3.2 文件读写
+          3.2.1 定义CArchive对象
+
+          3.2.2 读写操作
+                   >>   读操作
+                   <<   写操作
+          3.2.3 关闭
+                   CArchive::Close  
+             
+    3.3 关闭
+         CFile::Close       
+四 MFC的对话框
+    1 分类
+       模式-阻塞的
+       非模式-非阻塞的
+    2 相关类
+       CDialog类-提供了对话框的基本操作。使用该类既可以创建模式对话框也可以创建非模式
+       对话框。
+    3 创建模式对话框
+       3.1 添加对话框资源，并与对话框类关联
+       3.2 创建和显示对话框
+              CDialog::DoModal
+       3.3  关闭对话框
+              CDialog::OnOK/OnCancel
+    4 创建非模式对话框
+       4.1 添加对话框资源，并与对话框类关联
+       4.2 创建和显示对话框
+             与一般的框架窗口的过程类似
+      4.3  关闭对话框
+             4.3.1 重写CDialog::OnOK和OnCancel
+                      DestroyWindow();
+             4.3.2 重写CWnd::PostNcDestroy
+                      delete this;  
+ 
+       
+   
+     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      
+    
+
+
+   
+   
+
+   

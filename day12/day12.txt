@@ -1,0 +1,65 @@
+1 使用Ado组件访问数据库
+   1 概念
+      Ado是一个独立于MFC的单独的COM组件。
+   2 组件的相关文件
+      文件名称：msado15.dll
+      文件路径：C:\Program Files (x86)\Common Files\System\ado\msado15.dll
+   3 在MFC程序中导入Ado组件
+      在stdafx.h文件中，添加以下导入命令
+      #import 文件路径 no_namespace rename("EOF","adoEOF")
+      编译项目，会在项目的debug目录下，生成msado15.tlh和msado15.tli两个文件。
+   4 COM库的初始化
+      4.1 在App::InitInstance()函数中初始化COM库
+            CoInitialize(NULL);
+      4.2 在App::ExitInstance()函数中卸载COM库   
+            CoUninitialize();
+     完成了第3、4个步骤，意味着准备工作完成了。
+   5 COM组件的接口类
+      5.1 _ConnectionPtr类-功能类似于ODBC的CDatabase类。 CAdoDatabase
+      5.2 _RecordsetPtr类- 功能类似于ODBC的CRecordset类。
+     COM组件接口类的成员函数的参数是COM类型的，我们在使用时，不可避免的需要com类型与c++类型的频繁转换。通常会使用c++的封装类对com组件的这两个类做封装。以后，
+我们直接使用c++的封装类即可。
+     COM的字符串类型:_bsrt_t   (char*)   _bsrt_t(CString)
+     MFC的字符串类型CString    char*
+     COM的可变类型:_varaint_t   
+      
+  6  _ConnectionPtr类的使用
+     6.1 连接数据库
+      HRESULT Open (
+        _bstr_t ConnectionString,//连接字符串
+        _bstr_t UserID,//登录ID
+        _bstr_t Password,//密码
+        long Options //设置为-1
+     );
+     Access: Provider=Microsoft.ACE.OLEDB.12.0;Data Source=E:\csd1810\stuDB.accdb
+    6.2 关闭数据库
+    6.3 执行Sql语句
+        Execute 
+  7 _RecordsetPtr类   CAdoRecordset
+    7.1 打开记录集
+          Open
+      HRESULT Open (
+        const _variant_t & Source, //Sql语句、表名、存储过程名称
+        const _variant_t & ActiveConnection,//活动连接
+        enum CursorTypeEnum CursorType,//游标类型
+        enum LockTypeEnum LockType,//记录集的锁定类型
+        long Options//选项,adCmdText、adCmdTable、adCmdStoredProc
+     );
+     一般情况下，由c++类型转换为com类型，通常才构造传参的方式，构造
+     出com类型的对象。由com类型转换为c++类型时，通常采用强制转换。
+     
+     
+   7.2 获取记录集中字段的数量
+      Fields->GetCount();
+   7.3 获取记录集中字段的名称
+      Fields->GetItem(index)->GetName();
+   7.4 获取记录集中字段的值
+      Fields->GetItem(index)->GetValue();
+   7.5 记录集的指针操作
+       MoveFirst()
+       MoveLast()
+       MovePrevious()
+       MoveNext()
+       IsEOF()
+       IsBOF()
+              

@@ -1,0 +1,142 @@
+一 解决方案设置
+1 新建项目，在其它项目类型中，选择Visual Studio解决方案，名称为RemoteCtrl。
+2 右击解决方案，选择添加新建项目。选择Win32项目，名称为Server，直接点击完成。
+
+二 远程控制Server端步骤
+1   使用socket库
+1.1 在stdafx.h中加入以下代码：
+    #include <winsock2.h>
+    #pragma comment(lib,"ws2_32.lib")
+1.2 在项目中添加GlobalHead.h和GlobalHead.cpp文件用于定义一些全局变量
+    --编译工程--
+
+2  在server.cpp中完成互斥、事件并初始化socket库，首先包含头文件，#include "globalhead.h"。
+2.1 创建互斥体，保证程序只运行一个实例
+    if ((hOnlyInstance=CreateMutex(NULL,false,"JFY's PeerYou"))==NULL)
+	return -1;
+    else if (GetLastError()==ERROR_ALREADY_EXISTS)
+	return -1;
+2.2 创建用于退出程序的事件
+    if ((hExitEvent=WSACreateEvent())==WSA_INVALID_EVENT)
+    {
+	CloseHandle(hOnlyInstance);
+	return -1;
+    }
+2.3 初始化socket库
+    WSADATA wsaData;
+    if (WSAStartup(MAKEWORD(2,2),&wsaData)!=0) 
+    {
+	CloseHandle(hOnlyInstance);
+	CloseHandle(hExitEvent);
+	return -1;
+    }
+2.4 在InitInstance()函数中，如果创建窗口失败，关闭句柄，卸载socket库
+    if (!hWnd)
+    {
+        CloseHandle(hOnlyInstance);
+	WSACloseEvent(hExitEvent);
+	WSACleanup();
+       return FALSE;
+    }
+2.5 在最后程序退出前，关闭句柄，卸载socket库
+    CloseHandle(hOnlyInstance);
+    WSACloseEvent(hExitEvent);
+    WSACleanup();
+    --编译工程--
+
+3 在窗口处理函数中处理WM_CREATE、WM_PAINT、WM_CLOSE消息
+3.1 case WM_CREATE:
+         // 1 获取主机名称和IP
+         // 2 创建线程  
+3.2 case WM_PAINT:
+         // 显示主机名称和IP
+3.3 case WM_CLOSE:
+         // 资源清理工作
+
+
+4 socket通信处理，在工程中添加PeerSocket.h和PeerSocket.cpp文件完成服务器端通信函数的实现
+#define PEER_STREAM SOCK_STREAM
+#define PEER_DGRAM  SOCK_DGRAM
+#define PEER_RAW	SOCK_RAW
+
+bool PeerCreateSocket(SOCKET *pNewSocket,int iSockType);//创建
+bool PeerBindSocket(SOCKET BindSocket,char *szHostAddr,int iHostPort);//绑定
+bool PeerListenSocket(SOCKET ListenSocket);//监听
+bool PeerAcceptSocket( SOCKET *pTravelSocket, SOCKADDR_IN *psockAddr, SOCKET ListenSock );//接收客户端连接
+bool PeerShutDownSocket(SOCKET nowSocket);//断开连接
+bool PeerCloseSocket(SOCKET nowSocket);//关闭连接
+bool PeerSendData(SOCKET socket,char *data,DWORD len,DWORD *retlen);//发送数据
+bool PeerRecvData(SOCKET socket,char *data,DWORD len,DWORD *retlen);//接收数据
+bool PeerSendDataS(SOCKET socket,char *data,DWORD len,DWORD *retlen);//服务器端发送数据，调用发送数据函数
+bool PeerRecvDataS(SOCKET socket,char *data,DWORD len,DWORD *retlen);//服务器端接收数据，调用接收数据函数
+
+5 添加屏幕捕获的处理，在工程中添加CaptureScreen.h和CaptureScreen.cpp文件
+void CleanScreenInfo(void);
+bool GetScreenData(int nBits);
+
+6 添加鼠标键盘和屏幕处理函数，在工程中添加ScreenCtrl.h和ScreenCtrl.cpp文件
+bool PeerScreenMouseKey(SOCKET s);
+bool PeerScreenGet(SOCKET s);
+
+7 线程处理
+7.1 在工程中添加command.h文件，定义用于封装传输信息的结构体
+7.2 添加PeerThread.头文件，添加与线程相关的结构体、列表和线程函数的声明
+7.3 添加PeerThread.cpp文件，添加线程函数的实现
+
+8 在server.cpp和stdafx.h中添加相关的头文件包含
+
+三 远程控制端Client步骤
+
+右击解决方案，选择添加新建项目。选择MFC项目，单文档、MFC标准、不使用unicode库，在用户界面设置，选择使用经典菜单。
+
+0  使用TrueColorToolBar类创建工具栏
+   0.1 将TrueColorToolBar.h和TrueColorToolBar.cpp拷贝到Client目录下，并包含到当前项目中。
+   0.2 在CMainFrame类中包含头文件#include "TrueColorToolBar.h"，添加成员变量CTrueColorToolBar    m_wndToolBar; 
+   0.3 插入工具栏资源，修改工具栏按钮大小为32*32.将3个相关图片拷贝到当前目录，并导入到项目，修改图片的ID。
+   0.4 在OnCreate函数中完成工具栏的创建
+
+
+1 添加socket库，创建事件
+1.1 项目的头文件stdafx.h中添加以下代码：
+    #include <winsock2.h>
+    #pragma comment(lib,"ws2_32.lib")
+1.2 App类的InitInstance()函数中，初始化socket库
+    if ((hExitEvent=WSACreateEvent())==WSA_INVALID_EVENT)
+    {
+      return -1;
+    }
+    WSAStartup(...); 
+
+1.3 App类的ExitInstance()函数中，卸载socket库 
+    WSACleanup();
+    WSACloseEvent(hExitEvent);
+   
+2 在项目中，添加command.h文件，用于定义在客户端和服务器之间传递的数据的结构体。
+
+3 socket通信处理，在工程中添加PeerSocket.h和PeerSocket.cpp文件完成客户端通信函数的实现
+
+4 全局变量的定义
+  4.1 在Client.cpp中添加全局变量
+      WSAEVENT hExitEvent;
+      char ADDRESS[16];
+      BOOL g_ExitThread = FALSE;
+      CWinThread *hThreadScreen = NULL;   
+  4.2 在stdafx.h中添加全局变量的外部声明
+      extern WSAEVENT hExitEvent;
+      extern char ADDRESS[16];
+      extern BOOL g_ExitThread;
+      extern CWinThread *hThreadScreen;
+
+5 在视图类中添加鼠标/键盘事件处理
+   
+
+6 在CMainFrame类中添加工具栏按钮的消息处理函数
+
+7 注意的问题：ini 文件中的配置信息
+
+
+    
+
+  
+
+

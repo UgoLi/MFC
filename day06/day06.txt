@@ -1,0 +1,92 @@
+一、MFC切分窗口
+ 1. 窗口切分的类型
+  1.1 静态切分
+    程序编写时，就确定了窗口切分的数量。不同的视图窗口可以使用不同的视图类。
+  1.2 动态切分
+    程序运行时，由用户实时的完成窗口的切分。通常情况下，动态切分窗口都使用相同的视图类。
+ 2.相关类和函数
+  2.1 相关类
+   CSplitterWnd类 -- 主要提供了窗口切分的功能  父类是CWnd类。
+     #include <afxext.h>
+  2.2 相关函数
+   OnCreateClient()函数 -- 是CFrameWnd类的成员函数，是一个虚函数，子类重写该虚函数，完成客户区对象以及窗口的创建。默认被CFrameWnd::OCreate()函数调用。
+ 
+ 3. 静态切分
+  3.1 创建静态切分窗口
+   virtual BOOL CreateStatic(
+      CWnd* pParentWnd,      // 父窗口对象指针
+      int nRows,             // 行数  最大值为16
+      int nCols,             // 列数  最大值为16
+      DWORD dwStyle = WS_CHILD | WS_VISIBLE, // 窗口的风格
+      UINT nID = AFX_IDW_PANE_FIRST          // 窗口ID(自适应)
+   );
+  3.2 创建视图
+   CSplitterWnd::CreateView
+   virtual BOOL CreateView(
+     int row, 						// 行的索引
+     int col,						// 列的索引
+     CRuntimeClass* pViewClass,  // 视图类的运行时类信息
+     SIZE sizeInit,					// 初始大小
+     CCreateContext* pContext    // 创建上下文结构体指针
+   );
+  3.3 根据行列索引获取视图对象
+   CSplitterWnd::GetPane
+
+练习：创建一个3*3的静态切分窗口，视图类使用CMyView类，视图窗口的大小大致相同。
+ GetClientRect -- 获取窗口客户区大小
+ 
+ 4. 动态切分窗口
+  virtual BOOL Create(
+    CWnd* pParentWnd,  // 父窗口对象指针
+    int nMaxRows,      // 最大行数
+    int nMaxCols,      // 最大列数
+    SIZE sizeMin,      // 最小尺寸
+    CCreateContext* pContext, // 指定所需要的视图类的运行时类信息
+    DWORD dwStyle = WS_CHILD | WS_VISIBLE | WS_HSCROLL | WS_VSCROLL | SPLS_DYNAMIC_SPLIT, // 窗口风格
+    UINT nID = AFX_IDW_PANE_FIRST  // 窗口ID 
+  );
+
+二、MFC的文档
+ 1. 相关类
+  CDocument类 -- 父类是CCmdTarget类，作用的是管理数据，包括数据的保存和加载等。
+ 2. CDocument类的使用
+  2.1 CView::OnInitialUpdate() -- 视图类的初始化更新的函数
+    该函数在视图第一次附加到文档之后、初始化显示视图窗口之前被框架调用。
+  2.2 CView::GetDocument()  -- 获取和视图关联的文档
+  
+  2.3 CFrameWnd::InitialUpdateFrame()  --  初始化更新框架
+   创建框架窗口之后调用该函数
+   
+   会引起所有与该框架相关的视图类的OnInitialUpdate()函数的调用。
+ 
+ 3. 创建过程
+  3.1 框架窗口的WM_CREATE消息处理函数(CFrameWnd::OnCreate)
+   在函数中，动态创建视图类对象，并创建视图窗口
+  3.2 视图窗口的WM_CREATE消息处理函数(CView::OnCreate)
+ 
+ 4. 四个类(对象)之间的关系
+  CWinApp
+    |-> m_pMainWnd        (CFrameWnd)
+      |-> m_pViewActive   (CView)
+        |-> m_pDocument   (CDocument)
+          |-> m_viewList  (CView List)
+          
+  CView::GetDocument()
+  {
+     return m_pDocument;
+  }
+   
+  5. 获取四个类(对象)的方法
+   5.1 获取应用程序对象
+     AfxGetApp()
+   5.2 获取框架对象
+     AfxGetMainWnd()
+   5.3 获取视图对象
+     ((CFrameWnd*)AfxGetMainWnd())->GetActiveView()
+   5.4 获取文档对象
+     ((CFrameWnd*)AfxGetMainWnd())->GetActiveView()->GetDocument()
+  
+  6. 命令消息处理
+    View ---> Document --> Frame  ---> App
+    
+    

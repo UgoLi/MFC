@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MFCView", "MFCView\MFCView.vcxproj", "{42688A4D-52BE-44FA-BF5A-161D9A4E68EE}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MFCDynamic", "MFCDynamic\MFCDynamic.vcxproj", "{82C45FFE-72BC-47EC-B744-C9CDBD8A983E}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MFCDynCreate", "MFCDynCreate\MFCDynCreate.vcxproj", "{C7F823E8-41E1-4760-B8BF-3C2C8B3DAACA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{42688A4D-52BE-44FA-BF5A-161D9A4E68EE}.Debug|Win32.ActiveCfg = Debug|Win32
+		{42688A4D-52BE-44FA-BF5A-161D9A4E68EE}.Debug|Win32.Build.0 = Debug|Win32
+		{42688A4D-52BE-44FA-BF5A-161D9A4E68EE}.Release|Win32.ActiveCfg = Release|Win32
+		{42688A4D-52BE-44FA-BF5A-161D9A4E68EE}.Release|Win32.Build.0 = Release|Win32
+		{82C45FFE-72BC-47EC-B744-C9CDBD8A983E}.Debug|Win32.ActiveCfg = Debug|Win32
+		{82C45FFE-72BC-47EC-B744-C9CDBD8A983E}.Debug|Win32.Build.0 = Debug|Win32
+		{82C45FFE-72BC-47EC-B744-C9CDBD8A983E}.Release|Win32.ActiveCfg = Release|Win32
+		{82C45FFE-72BC-47EC-B744-C9CDBD8A983E}.Release|Win32.Build.0 = Release|Win32
+		{C7F823E8-41E1-4760-B8BF-3C2C8B3DAACA}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C7F823E8-41E1-4760-B8BF-3C2C8B3DAACA}.Debug|Win32.Build.0 = Debug|Win32
+		{C7F823E8-41E1-4760-B8BF-3C2C8B3DAACA}.Release|Win32.ActiveCfg = Release|Win32
+		{C7F823E8-41E1-4760-B8BF-3C2C8B3DAACA}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

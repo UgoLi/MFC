@@ -1,0 +1,85 @@
+一、MFC菜单
+ 1. 相关问题
+   Win32  --- HMENU
+   MFC   ---  CMenu
+ 2. 相关类
+   CMenu类 -- 封装了对菜单的各种操作，同时还封装了一个重要的成员变量 m_hMenu(保存的是菜单句柄)
+ 3. 菜单的使用
+  3.1 添加菜单资源
+  3.2 将菜单设置到窗口
+    1) 处理框架窗口的 WM_CREATE 消息
+      CMenu menu;           // 创建菜单对象
+      menu.LoadMenu();      // 加载菜单
+      CFrameWnd::SetMenu(); // 把菜单设置到窗口
+    2) 调用Create函数创建窗口时传参
+      pFrame->Create(NULL,"MFCBar",WS_OVERLAPPEDWINDOW,
+		   CFrameWnd::rectDefault,NULL,(char*)IDR_MENU1);
+     
+  3.3 消息处理
+   ON_COMMAND 
+   ON_UPDATE_COMMAND_UI 
+   
+  3.4 右键菜单
+    ON_WM_CONTEXTMENU
+   3.4.1 添加菜单资源
+   3.4.2 加载菜单资源
+    CMenu::LoadMenu
+   3.4.3 获取子菜单
+    CMenu::GetSubMenu
+   3.4.4 显示
+    CMenu::TrackPopupMenu  
+    
+  3.5 命令消息的顺序
+   在应用程序类中添加消息映射的相关宏，处理"新建"菜单
+   DECLARE_MESSAGE_MAP
+   BEGIN_MESSAGE_MAP(CMyWiNApp,CWinApp)
+     ON_COMMAND(ID_NEW,OnNew)
+   END_MESSAGE_MAP() 
+   
+   框架 ----> 应用程序
+   
+二、MFC工具栏
+ 1. 相关类
+  CToolBar类 -- 提供了对工具栏的各种操作
+ 2. CToolBar类的使用
+  2.1 创建工具栏窗口
+   CToolBar::Create/ex
+  2.2 加载工具栏资源
+   CToolBar::LoadToolBar
+  2.3 停靠工具栏
+   2.3.1 设置工具栏允许停靠
+    CToolBar::EnableDocking
+   2.3.2 设置框架窗口允许被停靠
+    CFrameWnd::EnableDocking
+   2.3.3 停靠工具栏
+    CFrameWnd::DockControlBar
+  2.4 设置工具栏的显示和隐藏
+    CCOntrolBar::IsVisible
+    CFrameWnd::ShowControlBar
+     
+三、MFC状态栏    
+ 1. 相关类
+  CStatusBar类 -- 提供了对状态栏的各种操作
+ 2. CStatusBar类的使用
+  2.1 创建状态栏窗口
+   CStatusBar::Create
+  2.2 设置状态栏的指示器
+   CStatusBar::SetIndicators
+  2.3 设置指定指示器的文本、风格、宽度等
+   CStatusBar::SetPaneText
+   CStatusBar::SetPaneInfo
+
+练习：在状态栏中添加一个指示器，显示当前鼠标坐标
+ 步骤：
+  1. 在字符串表添加一个字符串
+    IDS_POS      
+  2. 在指示器数组中添加一个元素： IDS_POS
+  3. 添加对鼠标消息 WM_MOUSEMOVE 的处理
+      ON_WM_MOUSEMOVE
+      OnMouseMove
+      
+      SetPaneText
+      
+  4. 设置指示器显示的样式和宽度
+      SetPaneInfo
+  

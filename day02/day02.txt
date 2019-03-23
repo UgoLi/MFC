@@ -1,0 +1,53 @@
+一、窗口创建
+ 1. 创建过程
+  1.1 加载菜单
+  1.2 使用pFrame调用CreateEx函数 注册窗口类并创建窗口
+   1.2.1 调用PreCreateWindow函数 设计并注册窗口类
+练习：重写虚函数 PreCreateWindow，改变窗口显示的位置和大小
+   1.2.2 调用 AfxHookWindowCreate函数
+    1) 调用Win32的API函数SetWindowsHookEx 安装类型 WH_CBT 的钩子
+    2) 把pFrame保存在全局变量的成员中
+   1.2.3 调用::CreateWindowEx函数创建带扩展风格的窗口
+   1.2.4 满足钩子条件，调用钩子处理函数
+    1) 建立窗口句柄hWnd和框架窗口对象pFrame之间的映射关系
+    2) 将窗口处理函数更改为AfxWndProc
+   1.2.5 跳回1.2.3 ::CreateWindowEx之后继续执行
+
+ 2.钩子函数
+ // 安装指定类型的钩子
+ HHOOK SetWindowsHookEx(
+  __in  int idHook,        // 钩子类型  WH_CBT
+  __in  HOOKPROC lpfn,     // 钩子处理函数的函数指针 CBTProc
+  __in  HINSTANCE hMod,    // dll句柄 对于局部钩子为NULL
+  __in  DWORD dwThreadId   // 线程ID  对于全局钩子为0
+ );
+ // 钩子处理函数 (WH_CBT)
+ LRESULT CALLBACK CBTProc(
+  __in  int nCode,         // 钩子码      HCBT_CREATEWND
+  __in  WPARAM wParam,     // 刚创建的新窗口的句柄
+  __in  LPARAM lParam      // ...
+ );
+ LONG_PTR SetWindowLongPtr(
+  __in  HWND hWnd,          // 窗口句柄
+  __in  int nIndex,         // 要更改窗口属性的编号  GWLP_WNDPROC
+  __in  LONG_PTR dwNewLong  // 要更改的新值  新的窗口处理函数名
+ );
+ 
+ 3.重写虚函数 CWnd::WindowProc函数，完成窗口消息的处理
+练习：添加对WM_PAINT消息的处理，实现在窗口客户区绘制字符串。
+      注意获取窗口句柄的方式
+   3.1 消息产生进入窗口的AfxWndProc函数
+   3.2 利用已知的 窗口句柄 找到与之绑定的框架类对象地址(pFrame)
+   3.3 调用 AfxCallWndProc函数，把pFrame作为参数
+   3.4 利用框架类对象pFrame调用框架类的成员虚函数WindowProc，完成消息的处理
+ 
+ 4. 框架窗口类CFrameWnd总结
+  4.1 虚函数
+    1)PreCreateWindow() --- 在创建窗口前，修改窗口的一些参数。
+          在MFC框架内，作用是设计和注册窗口类
+    2)WindowProc() --- 窗口处理函数
+  4.2 成员变量
+   m_hWnd  -- 保存对应的窗口的句柄
+    
+
+

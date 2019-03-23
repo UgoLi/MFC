@@ -1,0 +1,45 @@
+马志国  149198978
+-------------------------------------------------------------
+day08 
+一、MFC绘图
+1 相关类
+   1.1 绘图设备上下文类(纸)
+   1.2 绘图对象类(画笔、画刷、字体等)
+         包括CPen-画笔、CBrush-画刷、CFont-字体、CBitmap-位图和CRgn-区域。
+         CPalette-调色板。 
+2 绘图设备上下文类
+   2.1 CDC类-封装了DC的句柄与操作DC相关的API。主要表示一般的绘图设备，例如：
+                     显示器、打印机。
+   2.2 CClientDC类-继承自CDC类，表示指定窗口的客户区。
+   2.3 CPaintDC类-继承自CDC类，表示指定窗口的客户区。只在WM_PAINT消息的处理函数
+                             OnPaint()中使用。
+3 CDC类的使用
+   3.1 创建DC
+         CDC::CreateDC
+         virtual BOOL CreateDC( 
+          LPCTSTR lpszDriverName, //设备的驱动名称
+          LPCTSTR lpszDeviceName, //设备名称
+          LPCTSTR lpszOutput, //设备的接口
+          const void* lpInitData//设备的初始化参数
+         );
+         显示器：:CreateDC("DISPLAY",NULL,NULL,NULL); 
+
+   3.2 使用DC
+         CDC::TextOut/MoveTo/LineTo/Rectangle...
+   3.3 删除DC
+         CDC::DeleteDC
+4 CClientDC、CPaintDC的使用
+    只需要在创建对象时，将指定窗口的对象地址作为构造函数的参数即可。
+5 CPen、CBrush和CFont类的使用
+   5.1 创建绘图对象
+   5.2 将绘图对象选入到绘图设备中
+   5.3 使用绘图对象
+   5.4 恢复绘图设备中默认的绘图对象
+   5.5 删除绘图对象 
+    
+
+
+   
+   
+
+   

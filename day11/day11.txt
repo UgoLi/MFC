@@ -1,0 +1,90 @@
+MFC的第二部分 Windows平台的数据库访问技术
+1 使用ODBC类访问数据库
+  1.1 概念
+    Open Database Connectivity,微软开放式数据互联。一组访问和操作数据库的API.使用这组函数访问和操作不同类型的数据库。访问前，需要将不同的数据库设置为统一的ODBC数据源。
+  1.2 相关类
+        1.2.1 CDatabase类-主要功能是连接和关闭数据库
+        1.2.2 CRecordset类-主要是对数据(表)的操作。
+        #include <afxdb.h>
+  1.3 访问前，首先要设置ODBC数据源
+        32位:开始->控制面板->系统和安全->管理工具->数据源ODBC。直接双击打开
+        64位：C:\Windows\SysWOW64\odbcad32.exe,右击该程序以系统管理员的方式运行
+  1.4 ODBC类的使用步骤
+        1.4.1 连接数据库(打开ODBC数据源)
+                 CDatabase::Open
+        1.4.2 执行Sql语句
+                 CDatabase::ExecuteSQL
+        1.4.3 打开记录集
+                CRecordset::Open
+        1.4.4 获取字段的数量
+                CRecordset::GetODBCFieldCount
+        1.4.5 获取字段的信息
+                CRecordset::GetODBCFieldInfo
+        1.4.6 获取字段的值
+                CRecordset::GetFieldValue
+        1.4.7 记录集的指针操作
+                CRecordset::IsEOF
+                CRecordset::MoveNext
+        1.4.8 关闭记录集
+                 CRecordset::Close   
+        1.4.9 关闭数据库
+                 CDatabase::Close  
+  
+2 使用Ado组件访问数据库
+   1 概念
+      Ado是一个独立于MFC的单独的COM组件。
+   2 组件的相关文件
+      文件名称：msado15.dll
+      文件路径：C:\Program Files (x86)\Common Files\System\ado\msado15.dll
+   3 在MFC程序中导入Ado组件
+      在stdafx.h文件中，添加以下导入命令
+      #import 文件路径 no_namespace rename("EOF","adoEOF")
+      编译项目，会在项目的debug目录下，生成msado15.tlh和msado15.tli两个文件。
+   4 COM库的初始化
+      4.1 在App::InitInstance()函数中初始化COM库
+            CoInitialize(NULL);
+      4.2 在App::ExitInstance()函数中卸载COM库   
+            CoUninitialize();
+     完成了第3、4个步骤，意味着准备工作完成了。
+   5 COM组件的接口类
+      5.1 _ConnectionPtr类-功能类似于ODBC的CDatabase类。 CAdoDatabase
+      5.2 _RecordsetPtr类- 功能类似于ODBC的CRecordset类。
+     COM组件接口类的成员函数的参数是COM类型的，我们在使用时，不可避免的需要com类型与c++类型的频繁转换。通常会使用c++的封装类对com组件的这两个类做封装。以后，
+我们直接使用c++的封装类即可。
+      
+  6  _ConnectionPtr类的使用
+     6.1 连接数据库
+      HRESULT Open (
+        _bstr_t ConnectionString,//连接字符串
+        _bstr_t UserID,//登录ID
+        _bstr_t Password,//密码
+        long Options //设置为-1
+     );
+     Access: Provider=Microsoft.ACE.OLEDB.12.0;Data Source=E:\csd1810\stuDB.accdb
+    6.2 关闭数据库
+  7 _RecordsetPtr类   CAdoRecordset
+    7.1 打开记录集
+          Open
+      HRESULT Open (
+        const _variant_t & Source, //Sql语句、表名、存储过程名称
+        const _variant_t & ActiveConnection,//活动连接
+        enum CursorTypeEnum CursorType,//游标类型
+        enum LockTypeEnum LockType,//记录集的锁定类型
+        long Options//选项,adCmdText、adCmdTable、adCmdStoredProc
+     );
+   7.2 获取记录集中字段的数量
+      Fields->GetCount();
+   7.3 获取记录集中字段的名称
+      Fields->GetItem(index)->GetName();
+   
+         
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,130 @@
+// MFC的窗口创建流程
+pFrame->Create(NULL,"MFCCreate")
+{
+   // 1. 加载菜单
+   ::LoadMenu(...);
+   // 2. 调用CreateEx函数，创建带扩展风格的窗口
+   CreateEx(...,NULL,...)
+   {
+       CREATESTRUCT cs;
+       ...
+       cs.lpszClass = lpszClassName;// NULL 后面会赋值
+       ...
+       cs.hInstance = AfxGetInstanceHandle();
+       ...
+       2.1 设计和注册窗口类
+       PreCreateWindow(cs)
+       {
+          // AFX_WNDFRAMEORVIEW_REG的值为0x08，代表一类窗口
+          AfxDeferRegisterClass(AFX_WNDFRAMEORVIEW_REG)
+          {
+             WNDCLASS wndcls;
+             ...
+             // 缺省的窗口处理函数，后面会换
+             wndcls.lpfnWndProc = DefWindowProc;
+             ...
+             // 每个if语句对应一种类型的窗口
+             if (fToRegister & AFX_WNDFRAMEORVIEW_REG)
+	          {
+	             // _afxWndFrameOrView保存窗口类名称 "AfxFrameOrView100sd"
+	             _AfxRegisterWithIcon(&wndcls, _afxWndFrameOrView,..)
+	             {
+	                pWndCls->lpszClassName = lpszClassName;
+	                pWndCls->hIcon = ::LoadIcon(NULL, IDI_APPLICATION);
+	                return AfxRegisterClass(pWndCls)
+	                {
+	                   // 注册窗口类
+	                   ::AfxCtxRegisterClass(lpWndClass);
+	                }
+	             }
+	          }
+          }
+          // CREATECTRUCT 变量的成员lpszClass被重新赋值成"AfxFrameOrView100sd"
+          cs.lpszClass = _afxWndFrameOrView;
+       }
+       // 2.2 在程序中安装一个类型为WH_CBT的钩子
+       AfxHookWindowCreate(this) // this ==== pFrame
+       {
+         // 获取全局变量 ccc 的地址
+          _AFX_THREAD_STATE* pThreadState = _afxThreadState.GetData();
+         // 调用Win32的API函数在程序中安装了一个类型为WH_CBT的钩子
+         ::SetWindowsHookEx(WH_CBT, _AfxCbtFilterHook,...);
+         // 把pFrame保存到ccc的一个成员m_pWndInit中
+         pThreadState->m_pWndInit = pFrame;
+       }
+       // 2.3 创建窗口
+       HWND hWnd = ::AfxCtxCreateWindowEx(...);
+       // 2.4 钩子处理函数
+       // 2.5 返回::AfxCtxCreateWindowEx后继续执行
+   }
+}
+
+**************************************************************
+  钩子处理函数
+**************************************************************
+_AfxCbtFilterHook(int code, WPARAM wParam,..)
+{
+   // 获取&ccc
+   _AFX_THREAD_STATE* pThreadState = _afxThreadState.GetData();
+   // 从ccc的成员中获取框架窗口地址  pFrame
+   CWnd* pWndInit = pThreadState->m_pWndInit;
+   // 获取窗口句柄
+   HWND hWnd = (HWND)wParam;
+   // 2.4.1 将句柄(hWnd)和框架窗口对象(pFrame)关联起来
+   pWndInit->Attach(hWnd)
+   {
+      CHandleMap* pMap = afxMapHWND(TRUE)
+      {
+         // 获取&bbb
+         AFX_MODULE_THREAD_STATE* pState = AfxGetModuleThreadState();
+         // new 了一个映射类对象，并把地址保存在bbb的一个成员中
+         pState->m_pmapHWND = new CHandleMap(...);
+      }
+      // 将窗口句柄hWnd保存在框架窗口类成员m_hWnd中
+      pMap->SetPermanent(m_hWnd = hWndNew, this)// this == pFrame
+      {
+         // 以句柄为键，窗口对象为值，建立映射关系
+         // m_permanentMap[(LPVOID)h] = permOb;
+         m_permanentMap[hWnd] = pFrame;
+      }
+   }
+   // 2.4.2 将窗口处理函数更改为AfxWndProc
+   // 获取真正的窗口处理函数 AfxWndProc
+   WNDPROC afxWndProc = AfxGetAfxWndProc();
+   // 将窗口处理函数更改为真正的窗口处理函数 AfxWndProc
+   (WNDPROC)SetWindowLongPtr(hWnd, GWLP_WNDPROC,
+				(DWORD_PTR)afxWndProc);
+}
+
+********************************************************
+ 消息处理过程 (以WM_CREATE为例)
+********************************************************
+AfxWndProc(...)
+{
+   // 1. 根据句柄获取对应的框架窗口类对象地址 pFrame
+   CWnd* pWnd = CWnd::FromHandlePermanent(hWnd)
+   {
+      CHandleMap* pMap = afxMapHWND()
+      {
+        // 获取 &bbb
+        AFX_MODULE_THREAD_STATE* pState = AfxGetModuleThreadState();
+        // 返回保存在bbb成员m_pmapHWND中的映射类对象地址
+        return pState->m_pmapHWND;
+      }
+      pWnd = (CWnd*)pMap->LookupPermanent(hWnd)
+      {
+        return (CObject*)m_permanentMap.GetValueAt((LPVOID)h);
+        // 等效于
+        return m_permanentMap[hWnd];
+      }
+   }
+   // 2. 调用 AfxCallWndProc函数，参数中包含pWnd(pFrame)
+   AfxCallWndProc(pWnd, hWnd, nMsg, wParam, lParam)
+   {
+     // 由于虚函数机制，调用CMyFrameWnd::WindowProc
+     pWnd->WindowProc(nMsg, wParam, lParam)
+     {
+       // 回到自己的代码
+     }
+   }
+}

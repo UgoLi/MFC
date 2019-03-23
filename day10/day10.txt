@@ -1,0 +1,65 @@
+1 列表控件
+  1.1 相关类
+      CListCtrl类-控件类，主要在对话框程序中使用。提供了对控件的操作。
+      CListView类-视图类，主要在文档视图架构程序中使用。通过调用GetListCtrl函数
+                                获取视图包含的控件，调用控件的相关函数完成操作。         
+  1.2 CListCtrl类的使用
+      有四种不同的视图方式(图标、小图标、列表和报表)，在属性中设置。 
+      1.2.1 添加控件的图标列表
+            1> 添加位图资源，设计图标
+            2> 使用位图资源，创建图标列表
+               CImageList::Create
+            3> CListCtrl::SetImageList
+      1.2.2 添加控件的列
+            CListCtrl::InsertColumn
+      1.2.3 添加控件的选项
+            CListCtrl::InsertItem
+      1.2.4 设置列的文本
+            CListCtrl::SetItemText
+                                    
+                      
+2 树控件
+  2.1 相关类
+    CTreeCtrl类-控件类，主要在对话框程序中使用。提供了对控件的操作。
+    CTreeView类-视图类，主要在文档视图架构程序中使用。通过调用GetTreeCtrl函数
+                                获取视图包含的控件，调用控件的相关函数完成操作。 
+  2.2 CTreeCtrl的使用
+      树的节点分根节点和非根节点两类。其中根节点没有父节点；非根节点是有父节点的。
+      节点的图标可以设置两个：节点被选中时，设置图标，节点没有被选中时，可以设置
+      另外一个图标。 
+      2.2.1 添加控件的图标列表
+            1> 添加位图资源，设计图标
+            2> 使用位图资源，创建图标列表
+               CImageList::Create
+            3> CTreeCtrl::SetImageList
+      2.2.2 插入树控件
+            HTREEITEM InsertItem( 
+             LPCTSTR lpszItem, //节点名称
+             int nImage, //节点的图标
+             int nSelectedImage,//节点被选中时的图标 
+             HTREEITEM hParent = TVI_ROOT,//如果使用缺省值，表示插入的节点是根节点；
+                                          //否则该参数表示要插入的节点的父节点。 
+             HTREEITEM hInsertAfter = TVI_LAST//如果是用缺省值，表示在末尾添加节点
+                                          //表示在参数指定的节点后添加节点。
+            ); 
+      2.2.3 设置节点高度
+            CTreeCtrl::SetItemHeight
+      2.2.4 展开节点
+            CTreeCtrl::Expand
+      2.2.5 获取当前选中节点
+            CTreeCtrl::GetSelectedItem
+      2.2.6 删除节点
+            CTreeCtrl::DeleteItem
+      2.2.7 设置节点文本
+            CTreeCtrl::SetItemText
+      ......
+      如何保存树描述的数据？
+      配置文件 *.ini
+      数据库,   Nodeid,NodeName,Parentid
+      xml文件，JSON文件。
+                           
+3 属性页控件 
+  3.1 相关类
+      CTabCtrl类-完成属性页的操作。
+  3.2 CTabCtrl类的使用
+             

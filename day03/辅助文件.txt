@@ -1,0 +1,58 @@
+
+AfxWndProc(HWND hWnd, UINT nMsg, WPARAM wParam, LPARAM lParam)
+{
+  CWnd* pWnd = CWnd::FromHandlePermanent(hWnd)
+  {
+     CHandleMap* pMap = afxMapHWND()
+     {
+        // 获取&bbb
+        AFX_MODULE_THREAD_STATE* pState = AfxGetModuleThreadState();
+        // 返回保存在bbb中的映射类对象的地址
+        return pState->m_pmapHWND;
+     }
+     pWnd = (CWnd*)pMap->LookupPermanent(hWnd)
+     {
+        // 返回pFrame
+        return (CObject*)m_permanentMap.GetValueAt((LPVOID)h);
+     }
+  }
+  return AfxCallWndProc(pWnd, hWnd, nMsg, wParam, lParam)
+  {
+     lResult = pWnd->WindowProc(nMsg, wParam, lParam)
+     {
+        LRESULT lResult = 0;
+	     if (!OnWndMsg(message, wParam, lParam, &lResult))
+		    lResult = DefWindowProc(message, wParam, lParam);
+	     return lResult;
+     }
+  }
+}
+
+BOOL CWnd::OnWndMsg(UINT message, WPARAM wParam, LPARAM lParam, LRESULT* pResult)
+{
+   const AFX_MSGMAP* pMessageMap;
+   pMessageMap = GetMessageMap();
+   for (/* pMessageMap already init'ed */; pMessageMap->pfnGetBaseMap != NULL;
+			pMessageMap = (*pMessageMap->pfnGetBaseMap)())
+	{
+	   if ((lpEntry = AfxFindMessageEntry(pMessageMap->lpEntries,
+					message, 0, 0)) != NULL)
+		{
+		   pMsgCache->lpEntry = lpEntry;
+			goto LDispatch;
+		}
+	}
+LDispatch:
+  union MessageMapFunctions mmf;
+  mmf.pfn = lpEntry->pfn;
+  switch (lpEntry->nSig)
+  {
+    case AfxSig_i_v_s:
+      // mmf.pfn_i_s ===> CMyFrameWnd::OnCreate
+		lResult = (this->*mmf.pfn_i_s)(reinterpret_cast<LPTSTR>(lParam));
+		{
+		   // 用户多WM_CREATE消息的处理
+		}
+		break;
+  }
+}

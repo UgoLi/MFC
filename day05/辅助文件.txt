@@ -1,0 +1,47 @@
+// 1. 命令消息的路由
+CFrameWnd::OnCmdMsg(...)
+{
+   // 1.1 活动视图
+   CView* pView = GetActiveView();
+	if (pView != NULL && pView->OnCmdMsg(nID, nCode, pExtra, pHandlerInfo))
+		return TRUE;
+
+	// 1.2 框架
+	if (CWnd::OnCmdMsg(nID, nCode, pExtra, pHandlerInfo))
+		return TRUE;
+
+	// 1.3 应用程序
+	CWinApp* pApp = AfxGetApp();
+	if (pApp != NULL && pApp->OnCmdMsg(nID, nCode, pExtra, pHandlerInfo))
+		return TRUE;
+}
+
+// 2. 运行时类信息
+dog.IsKindOf(RUNTIME_CLASS(CObject))
+{
+   // pClassThis <=====> &classCDog
+   CRuntimeClass* pClassThis = GetRuntimeClass();
+   return pClassThis->IsDerivedFrom(pClass)
+   {
+      while (pClassThis != NULL)
+      {
+         if (pClassThis == pBaseClass)
+			  return TRUE;
+			pClassThis = pClassThis->m_pBaseClass;
+      }
+   }
+}
+
+// 3. 动态创建
+CreateInstance(..)
+{
+   // CRuntimeClass::CreateObject()
+   return pClass->CreateObject();
+   {
+       // m_pfnCreateObject ===> CDog::CreateObject
+       pObject = (*m_pfnCreateObject)();
+       {
+          return new CDog;
+       }
+   }
+}
